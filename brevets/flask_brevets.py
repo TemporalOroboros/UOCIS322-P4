@@ -7,8 +7,8 @@ Replacement for RUSA ACP brevet time calculator
 import flask
 from flask import request
 import arrow  # Replacement for datetime, based on moment.js
-import acp_times  # Brevet time calculations
-import config
+import src.acp_times as acp_times  # Brevet time calculations
+import src.config as config
 
 import logging
 
@@ -23,20 +23,11 @@ app.secret_key = CONFIG.SECRET_KEY
 # Pages
 ###
 
-
 @app.route("/")
 @app.route("/index")
 def index():
     app.logger.debug("Main page entry")
     return flask.render_template('calc.html')
-
-
-@app.errorhandler(404)
-def page_not_found(error):
-    app.logger.debug("Page not found")
-    flask.session['linkback'] = flask.url_for("index")
-    return flask.render_template('404.html'), 404
-
 
 ###############
 #
@@ -44,6 +35,7 @@ def page_not_found(error):
 #   These return JSON, rather than rendering pages.
 #
 ###############
+
 @app.route("/_calc_times")
 def _calc_times():
     """
@@ -53,17 +45,27 @@ def _calc_times():
     """
     app.logger.debug("Got a JSON request")
     km = request.args.get('km', 999, type=float)
-    app.logger.debug("km={}".format(km))
+    brevet = request.args.get('brevet', 200, type=float)
+    iso_start_time = request.args.get('start_time', arrow.now().isoformat, type=str)
+    start_time = arrow.get(iso_start_time)
+
+    app.logger.debug("km={}, brevet={}, start_time={}".format(km, brevet, iso_start_time))
     app.logger.debug("request.args: {}".format(request.args))
-    # FIXME!
-    # Right now, only the current time is passed as the start time
-    # and control distance is fixed to 200
-    # You should get these from the webpage!
-    open_time = acp_times.open_time(km, 200, arrow.now().isoformat).format('YYYY-MM-DDTHH:mm')
-    close_time = acp_times.close_time(km, 200, arrow.now().isoformat).format('YYYY-MM-DDTHH:mm')
+    
+    open_time = acp_times.open_time(km, brevet, start_time).format('YYYY-MM-DDTHH:mm')
+    close_time = acp_times.close_time(km, brevet, start_time).format('YYYY-MM-DDTHH:mm')
     result = {"open": open_time, "close": close_time}
     return flask.jsonify(result=result)
 
+###
+# Error Handlers
+###
+
+@app.errorhandler(404)
+def page_not_found(error):
+    app.logger.debug("Page not found")
+    flask.session['linkback'] = flask.url_for("index")
+    return flask.render_template('404.html'), 404
 
 #############
 
@@ -74,3 +76,4 @@ if app.debug:
 if __name__ == "__main__":
     print("Opening for global access on port {}".format(CONFIG.PORT))
     app.run(port=CONFIG.PORT, host="0.0.0.0")
+
