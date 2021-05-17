@@ -116,7 +116,7 @@
             var TIME_CALC_URL = SCRIPT_ROOT + "/_calc_times";
 
             function calc_times(control) {
-              var km = Meth.floor(control.find("input[name='km']").val());
+              var km = Math.floor(control.find("input[name='km']").val());
 			  var brevet = $("#brevet_dist_km").val();
 			  var zero_time = $("#begin_date").val();
 
@@ -165,6 +165,20 @@
                        // Then calculate times for this entry
                        calc_times(control_entry);
                     });
+
+				$('input[name="begin_date"]').change(
+					function() {
+					$('tr.control').each(function() {
+						calc_times($(this));
+					});
+				});
+
+				$('select[name="distance"]').change(
+					function() {
+					$('tr.control').each(function() {
+						calc_times($(this));
+					});
+				});
 
                });
 

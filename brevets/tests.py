@@ -1,6 +1,6 @@
 import nose
 import arrow
-import ../src.acp_times as acp_times
+import src.acp_times as acp_times
 
 
 ZERO_TIME = arrow.utcnow().floor('minutes') # Limited to minutes so it's compatible with the rounding donw in acp_times
