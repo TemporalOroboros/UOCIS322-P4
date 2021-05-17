@@ -1,6 +1,6 @@
 import nose
 import arrow
-import src.acp_times as acp_times
+import acp_times
 
 
 ZERO_TIME = arrow.utcnow().floor('minutes') # Limited to minutes so it's compatible with the rounding donw in acp_times
@@ -45,4 +45,9 @@ def test_close_brevet_size():
 	assert acp_times.close_time(1200, 600, BASE_ARROW) == BASE_ARROW.shift(hours=40)
 	assert acp_times.close_time(1200, 1000, BASE_ARROW) == BASE_ARROW.shift(hours=61, minutes=20)
 
+def tests():
+	test_open_times()
+	test_open_brevet_size()
+	test_close_times()
+	test_close_brevet_size()
 
