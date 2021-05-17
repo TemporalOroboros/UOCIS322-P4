@@ -10,12 +10,12 @@ def test_open_times():
 	"""Tests the open time offsets produced by several input values.
 	"""
 	base_time = arrow.get(ZERO_TIME)
-	assert acp_times.open_time(0, 1000, BASE_ARROW) == BASE_ARROW.format()
-	assert acp_times.open_time(60, 1000, BASE_ARROW) == BASE_ARROW.shift(hours=1, minutes=46)
-	assert acp_times.open_time(200, 1000, BASE_ARROW) == BASE_ARROW.shift(hours=5, minutes=53)
-	assert acp_times.open_time(400, 1000, BASE_ARROW) == BASE_ARROW.shift(hours=12, minutes=8)
-	assert acp_times.open_time(600, 1000, BASE_ARROW) == BASE_ARROW.shift(hours=18, minutes=48)
-	assert acp_times.open_time(1000, 1000, BASE_ARROW) == BASE_ARROW.shift(hours=33, minutes=5)
+	assert acp_times.open_time(0, 1000, BASE_ARROW).format() == BASE_ARROW.format()
+	assert acp_times.open_time(60, 1000, BASE_ARROW).format() == BASE_ARROW.shift(hours=1, minutes=46).format()
+	assert acp_times.open_time(200, 1000, BASE_ARROW).format() == BASE_ARROW.shift(hours=5, minutes=53).format()
+	assert acp_times.open_time(400, 1000, BASE_ARROW).format() == BASE_ARROW.shift(hours=12, minutes=8).format()
+	assert acp_times.open_time(600, 1000, BASE_ARROW).format() == BASE_ARROW.shift(hours=18, minutes=48).format()
+	assert acp_times.open_time(1000, 1000, BASE_ARROW).format() == BASE_ARROW.shift(hours=33, minutes=5).format()
 
 def test_open_brevet_size():
 	"""Tests that open times are properly limited by brevet size.
